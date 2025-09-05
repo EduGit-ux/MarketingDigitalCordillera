@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Página Minimalista</title>
+    <style>
+        :root {
+            --primary-color: #000093;
+            --secondary-color: #1bc403;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --white: #fff;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            scroll-behavior: smooth;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--primary-color);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 2rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .logo img {
+            margin-left: 80px;
+            height: 70px;
+            width: auto;
+        }
+
+        nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 2px;
+            left: 0;
+            bottom: -5px;
+            background-color: var(--secondary-color);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after,
+        nav a.active::after {
+            width: 100%;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--secondary-color);
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 1.8rem;
+            color: var(--white);
+            cursor: pointer;
+        }
+
+        section {
+            padding: 8rem 5% 2rem;
+            display: none;
+            min-height: 90vh;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Carrusel */
+        .carousel {
+            position: relative;
+            margin: auto;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            /* Importante para mantener la proporción responsiva */
+            padding-bottom: 40%;
+            /* Ajusta este valor para controlar la altura del carrusel (40% de su ancho) */
+            height: 0;
+            background-color: #eee;
+            /* Fondo temporal mientras carga la imagen */
+        }
+
+        .carousel img {
+            width: 100%;
+            height: 100%;
+            /* Ocupa el 100% de la altura del contenedor con padding-bottom */
+            display: none;
+            object-fit: cover;
+            /* Asegura que la imagen cubra el área sin distorsionarse */
+            position: absolute;
+            /* Para que ocupen el mismo espacio del carrusel */
+            top: 0;
+            left: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .carousel img.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Quiénes somos */
+        .gif-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .gif-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            background: #17a003;
+            /* Tono más oscuro al pasar el ratón */
+        }
+
+        .card h1 {
+            margin-top: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .card .details-container {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+
+        .card .details-container .card {
+            background: var(--white);
+            color: var(--text-color);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .card .details-container .card:hover {
+            transform: none;
+            background: var(--light-bg);
+        }
+
+
+        .card .details-container h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        /* Acordeón */
+        .accordion {
+            background: var(--primary-color);
+            color: var(--white);
+            cursor: pointer;
+            padding: 1rem 1.5rem;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 1.1rem;
+            transition: background 0.3s, border-radius 0.3s;
+            border-radius: 8px;
+            margin-bottom: 0.7rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .accordion i {
+            transition: transform 0.3s;
+        }
+
+        .accordion.active i {
+            transform: rotate(90deg);
+        }
+
+        .accordion:hover {
+            background: var(--secondary-color);
+        }
+
+        .panel {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            background: var(--white);
+            border-left: 3px solid var(--secondary-color);
+            margin-bottom: 1rem;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .panel.show {
+            max-height: 500px;
+            /* Ajusta esto según el contenido máximo esperado */
+            padding: 1rem 1.5rem;
+        }
+
+        .panel p {
+            margin: 0.5rem 0;
+        }
+
+        .accordion.sub {
+            background: #001f60;
+            /* Un tono más oscuro para los sub-acordeones */
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .accordion.sub:hover {
+            background: var(--secondary-color);
+        }
+
+        .panel.sub-panel {
+            border-left: 3px solid #001f60;
+        }
+
+
+        /* Popups */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .popup.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .popup-content {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .popup.active .popup-content {
+            transform: scale(1);
+        }
+
+        .popup-content h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .close-btn {
+            background: var(--primary-color);
+            border: none;
+            color: var(--white);
+            padding: 0.8rem 1.5rem;
+            margin-top: 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Estilos para otras secciones con contenido */
+        #marketing,
+        #redes {
+            text-align: center;
+            padding: 10% 5%;
+        }
+
+        #marketing h1,
+        #redes h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        #marketing p,
+        #redes p {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+
+
+        /* Media Queries para responsividad */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.8rem 1.5rem;
+            }
+
+            .logo img {
+                height: 100px;
+            }
+
+            nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                /* Ajustar según la altura del header */
+                left: 0;
+                width: 100%;
+                background: var(--primary-color);
+                box-shadow: var(--shadow);
+                padding: 1rem 0;
+                text-align: center;
+            }
+
+            nav.open {
+                display: flex;
+            }
+
+            nav a {
+                padding: 0.8rem 0;
+                margin: 0 1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            nav a:last-child {
+                border-bottom: none;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            section {
+                padding: 7rem 5% 2rem;
+            }
+
+            .carousel img {
+                height: 300px;
+            }
+
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .card h1 {
+                font-size: 1.5rem;
+            }
+
+            .popup-content {
+                padding: 2rem;
+            }
+
+            .popup-content h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 0.6rem 1rem;
+            }
+
+            .logo img {
+                height: 40px;
+            }
+
+            .hamburger {
+                font-size: 1.5rem;
+            }
+
+            nav {
+                top: 60px;
+            }
+
+            section {
+                padding: 6rem 5% 1rem;
+            }
+
+            .carousel img {
+                height: 200px;
+            }
+
+            .carousel-controls button {
+                padding: 0.5rem 0.8rem;
+                font-size: 1rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .card h1 {
+                font-size: 1.3rem;
+            }
+
+            .accordion {
+                padding: 0.8rem 1rem;
+                font-size: 1rem;
+            }
+
+            .panel {
+                padding: 0 1rem;
+            }
+
+            .popup-content {
+                padding: 1.5rem;
+            }
+
+            .popup-content h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .carousel {
+                padding-bottom: 55%;
+                /* Más alto en móviles */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .carousel {
+                padding-bottom: 70%;
+                /* Aún más alto en móviles pequeños */
+            }
+        }
+
+        /* Popup básico */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .popup.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .popup-content {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .close-btn {
+            background: #000093;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            background: #1bc403;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="https://www.farmaciascomunitarias.com.ec/wp-content/uploads/2023/06/Asset-4logo.png" alt="Logo">
+        </div>
+        <nav style="margin-right: 100px;" id="main-nav">
+            <a href="#inicio" onclick="showSection('inicio', this)">Inicio</a>
+            <a href="#quienes" onclick="showSection('quienes', this)">Quiénes Somos</a>
+            <a href="#merch" onclick="showSection('merch', this)">Merchandising</a>
+            <a href="#category" onclick="showSection('category', this)">Category Management</a>
+            <a href="#marketing" onclick="showSection('marketing', this)">Brand Management</a>
+            <a href="#redes" onclick="showSection('redes', this)">Marketing Digital</a>
+        </nav>
+        <div style="margin-right: 100px;" class="hamburger" id="hamburger-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+
+    <!-- Sección Inicio -->
+    <section id="inicio" class="active">
+        <div class="carousel">
+            <img src="Img/BannerUno.gif" class="active" alt="Banner 1">
+            <img src="Img/BannerDos.gif" alt="Banner 2">
+            <img src="Img/BannerTres.gif" alt="Banner 3">
+            <div class="carousel-controls">
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Quiénes Somos -->
+    <section id="quienes">
+        <div class="gif-container">
+            <img src="Img/White  Blue And Green Geometric Project Management Presentation.gif"
+                alt="Animación Quiénes Somos">
+        </div>
+        <div class="card-container">
+            <div class="card" onclick="toggleDetails(this, 'mision')">
+                <h1>
+                    <i class="fas fa-flag"></i> Misión
+                </h1>
+                <div class="details-container"></div>
+            </div>
+            <div class="card" onclick="toggleDetails(this, 'vision')">
+                <h1>
+                    <i class="fas fa-eye"></i> Visión
+                </h1>
+                <div class="details-container"></div>
+            </div>
+            <div class="card" onclick="toggleDetails(this, 'valores')">
+                <h1>
+                    <i class="fas fa-scale-balanced"></i> Valores
+                </h1>
+                <div class="details-container"></div>
+            </div>
+            <div class="card" onclick="toggleDetails(this, 'staff')">
+                <h1>
+                    <i class="fas fa-users"></i> Staff
+                </h1>
+                <div class="details-container"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popup -->
+    <div id="image-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeGallery()">Cerrar</span>
+            </br></br>
+            <div class="gallery-popup" style="display: flex; gap: 1rem; overflow-x: auto;">
+                <img src="Img/M1.png" alt="Foto 1" style="height:400px; border-radius:5px;">
+                <img src="Img/M2.png" alt="Foto 2" style="height:400px; border-radius:5px;">
+                <img src="Img/M3.png" alt="Foto 3" style="height:400px; border-radius:5px;">
+                <img src="Img/M4.png" alt="Foto 4" style="height:400px; border-radius:5px;">
+                <img src="Img/M5.png" alt="Foto 5" style="height:400px; border-radius:5px;">
+                <img src="Img/M5.png" alt="Foto 5" style="height:400px; border-radius:5px;">
+                <img src="Img/M6.png" alt="Foto 5" style="height:400px; border-radius:5px;">
+                <img src="Img/M7.png" alt="Foto 5" style="height:400px; border-radius:5px;">
+                <img src="Img/M8.png" alt="Foto 5" style="height:400px; border-radius:5px;">
+                <img src="Img/M9.png" alt="Foto 5" style="height:400px; border-radius:5px;">
+                <img src="Img/M10.png" alt="Foto 5" style="height:400px; border-radius:5px;">
+                <img src="Img/M11.png" alt="Foto 5" style="height:400px; border-radius:5px;">
+                <img src="Img/M12.png" alt="Foto 5" style="height:400px; border-radius:5px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Escaparates -->
+    <div id="image-popup-esc" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeGalleryEsc()">Cerrar</span>
+            </br></br>
+            <div class="gallery-popup" style="display: flex; gap: 1rem; overflow-x: auto;">
+                <img src="Img/E1.png" alt="Foto 1" style="height:400px; border-radius:5px;">
+                <img src="Img/E2.png" alt="Foto 2" style="height:400px; border-radius:5px;">
+                <img src="Img/E3.png" alt="Foto 3" style="height:400px; border-radius:5px;">
+                <img src="Img/E4.png" alt="Foto 4" style="height:400px; border-radius:5px;">
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección Merchandising -->
+    <section id="merch">
+        <button class="accordion">Merchandising <i class="fas fa-chevron-right"></i></button>
+        <div class="panel">
+            <h3>Conjunto de técnicas y acciones que se realizan dentro de la farmacia con el objetivo de optimizar las
+                ventas</h3>
+            <button class="accordion sub">Visual <i class="fas fa-chevron-right"></i></button>
+            <div class="panel sub-panel" style="overflow-y: auto; height: 150px;">
+                <div class="card-container">
+                    <div>
+                        <h3>Facing</h3>
+                        <p>
+                            Técnica de merchandising que consiste en exhibir de forma frontal las unidades
+                            de un mismo producto, mostrando siempre la cara principal.
+                        </p>
+                    </div>
+                    <div>
+                        <h3>Fronteo</h3>
+                        <p>
+                            El fronteo es la técnica que consiste en adelantar los productos hacia el borde
+                            del estante, manteniendo una apariencia de orden, abundancia y fácil acceso.
+                        </p>
+                    </div>
+                    <div>
+                        <h3>Efecto Piramidal</h3>
+                        <p>
+                            El efecto piramidal es una técnica de exhibición que organiza los productos en
+                            forma de pirámide, generando un punto focal que atrae la atención del cliente y
+                            resalta promociones, lanzamientos o marcas líderes.
+                        </p>
+                    </div>
+                </div>
+                </br>
+                <button style="height: 40px;" onclick="openGallery()"> <i class="fas fa-images"></i> Ver
+                    Imagenes</button>
+
+            </div>
+            <button class="accordion sub">Acción <i class="fas fa-chevron-right"></i></button>
+            <div class="panel sub-panel" style="overflow-y: auto; height: 150px;">
+                <p>Se enfoca en acciones inmediatas que estimulan la compra impulsiva, como promociones, degustaciones o
+                    jingles.</br>
+                    Jingle: Herramienta auditiva que refuerza la recordación de marca mediante melodías breves y
+                    persuasivas.
+                </p>
+                <!-- Botón para reproducir/pausar audio -->
+                <button id="audio-btn" style="
+                     background-color: var(--primary-color);
+                     color: white;
+                     border: none;
+                     padding: 0.8rem 1.5rem;
+                     border-radius: 5px;
+                     cursor: pointer;
+                     font-size: 1rem;
+                     display: flex;
+                     align-items: center;
+                     gap: 0.5rem;">
+                    <i class="fas fa-play"></i> Reproducir Audio
+                </button>
+                </br>
+                <button id="audio-btn-dos" style="
+                     background-color: var(--primary-color);
+                     color: white;
+                     border: none;
+                     padding: 0.8rem 1.5rem;
+                     border-radius: 5px;
+                     cursor: pointer;
+                     font-size: 1rem;
+                     display: flex;
+                     align-items: center;
+                     gap: 0.5rem;">
+                    <i class="fas fa-play"></i> Reproducir Audio
+                </button>
+
+                <!-- Audio -->
+                <audio id="miAudio">
+                    <source src="Img/JingleDos.MP3" type="audio/mpeg">
+                    Tu navegador no soporta el audio.
+                </audio>
+
+                <!-- Audio -->
+                <audio id="miAudioDos">
+                    <source src="Img/JingleUno.MP3" type="audio/mpeg">
+                    Tu navegador no soporta el audio.
+                </audio>
+
+            </div>
+
+            <button class="accordion sub">De Gestión <i class="fas fa-chevron-right"></i></button>
+            <div class="panel sub-panel" style="overflow-y: auto; height: 150px;">
+                <p>Escaparates: Son un recurso clave de atracción. Reflejan la identidad del establecimiento y funcionan
+                    como primer contacto visual con el cliente.</p>
+                </br>
+                <button style="height: 40px;" onclick="openGalleryEsc()"> <i class="fas fa-images"></i> Ver
+                    Imagenes</button>
+            </div>
+        </div>
+
+        <button class="accordion">Marketing Farmacéutico <i class="fas fa-chevron-right"></i></button>
+        <div class="panel" style="overflow-y: auto; height: 400px;">
+            <div style="text-align: center;">
+                <img src="Img/P1.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P2.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P3.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P4.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P5.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P6.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P7.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P8.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P9.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P10.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P11.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P12.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/P13.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Sección Brand Management -->
+    <section id="marketing">
+        <div
+            style="position: relative; margin-top: 10%; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto;">
+            <iframe src="https://view.genially.com/68a3db2ac4312d627aa71a81/presentation-the-brand-key"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                allowfullscreen="true" scrolling="no">
+            </iframe>
+        </div>
+    </section>
+
+
+
+
+    <!-- Sección Brand Management -->
+    <section id="category">
+
+        <button class="accordion">Rol de Categorías <i class="fas fa-chevron-right"></i></button>
+        <div class="panel" style="overflow-y: auto; height: 500px;">
+            <div
+                style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto;">
+                <iframe
+                    src="https://view.genially.com/686d44c60eb83063fb7521b0/horizontal-infographic-diagrams-embudo-farmacias-comunitarias"
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                    allowfullscreen="true" scrolling="no">
+                </iframe>
+            </div>
+        </div>
+
+        <button class="accordion">Proceso de Category Managment <i class="fas fa-chevron-right"></i></button>
+        <div class="panel" style="overflow-y: auto; height: 500px;">
+            <div style="text-align: center;">
+                <img src="Img/C1.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C2.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C3.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C4.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C5.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C6.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C7.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C8.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C9.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C10.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C11.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C12.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C13.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C14.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C15.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C16.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C17.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C18.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C19.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C20.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C21.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C22.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C23.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+                <img src="Img/C24.png" alt="Foto 1" style="height:100%; width: 100%; border-radius:5px;"></br>
+
+            </div>
+        </div>
+
+        <button class="accordion">Estrategia de Categorías<i class="fas fa-chevron-right"></i></button>
+        <div class="panel" style="overflow-y: auto; height: 500px;">
+            <div style="text-align: center;">
+                <img src="Img/EC1.jpeg" alt="Foto 1" style="height:30%; width: 30%; border-radius:5px;">
+                <img src="Img/EC2.jpeg" alt="Foto 1" style="height:30%; width: 30%; border-radius:5px;">
+            </div>
+        </div>
+
+        <button class="accordion">Revista<i class="fas fa-chevron-right"></i></button>
+        <div class="panel" style="overflow-y: auto; height: 100%; width: 100%;">
+            <iframe style="height: 500px; width: 90%;" src="https://heyzine.com/flip-book/8a54a0f459.html#page/2" title="Flipbook" loading="lazy"
+                allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+        </div>
+
+    </section>
+
+    <!-- Sección Redes Sociales -->
+    <section id="redes">
+        <div class="gif-container">
+            <img src="Img/RedesSociales.gif" alt="Animación Quiénes Somos">
+        </div>
+
+    </section>
+
+
+    <script>
+        // Navegación entre secciones
+        const navLinks = document.querySelectorAll("#main-nav a");
+        const sections = document.querySelectorAll("section");
+
+        function showSection(id, element) {
+            sections.forEach(sec => sec.classList.remove("active"));
+            document.getElementById(id).classList.add("active");
+
+            navLinks.forEach(link => link.classList.remove("active"));
+            if (element) {
+                element.classList.add("active");
+            } else { // Si se llama desde la URL, activamos el enlace correspondiente
+                document.querySelector(`#main-nav a[href="#${id}"]`).classList.add("active");
+            }
+
+            // Cerrar menú hamburguesa si está abierto
+            if (mainNav.classList.contains("open")) {
+                mainNav.classList.remove("open");
+            }
+        }
+
+        // Inicializar la sección activa al cargar la página o por URL
+        window.addEventListener('load', () => {
+            const initialSection = window.location.hash.substring(1) || 'inicio';
+            showSection(initialSection, document.querySelector(`#main-nav a[href="#${initialSection}"]`));
+        });
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                showSection(hash, document.querySelector(`#main-nav a[href="#${hash}"]`));
+            }
+        });
+
+
+        // Carrusel
+        let currentSlide = 0;
+        const slides = document.querySelectorAll(".carousel img");
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove("active"));
+            if (slides[index]) {
+                slides[index].classList.add("active");
+            }
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        setInterval(nextSlide, 4000); // Cambia de slide cada 4 segundos
+
+        // Detalles de Misión, Visión, Valores, Staff
+        const detailsContent = {
+            mision: [
+                { title: "", text: "Brindar acceso a medicamentos y servicios de salud de calidad a todas las comunidades ecuatorianas, promoviendo el bienestar integral a través de un modelo inclusivo y sostenible, que fomente la confianza y el cuidado." }
+            ],
+            vision: [
+                { title: "", text: "Ser la red de farmacias de referencia en Ecuador, reconocida por su compromiso con la salud y el desarrollo social, innovando constantemente en la oferta de productos y servicios que respondan a las necesidades de la comunidad." }
+            ],
+            valores: [
+                { title: "Compromiso", text: "Pasión por el bienestar de la comunidad." },
+                { title: "Transparencia", text: "Honestidad en cada acción." },
+                { title: "Calidad", text: "Seguridad y eficacia en lo que ofrecemos." },
+                { title: "Desarrollo Profesional", text: "Crecemos juntos con innovación y talento." },
+                { title: "Inclusión", text: "Salud para todos, sin barreras." }
+            ],
+            staff: [
+                { title: "", text: "Contamos con un equipo multidisciplinario de expertos en marketing, salud y comunicación, dedicados a ofrecer soluciones creativas y efectivas, comprometidos con el éxito de nuestros clientes." }
+            ]
+        };
+
+        function toggleDetails(card, type) {
+            const container = card.querySelector(".details-container");
+            const icon = card.querySelector("h1 i");
+
+            // Si el contenido ya está visible, lo ocultamos
+            if (container.style.display === "grid") {
+                container.style.display = "none";
+                card.style.background = "var(--secondary-color)"; // Restaurar color original
+                icon.classList.remove("fa-chevron-up");
+                icon.classList.add("fa-chevron-down");
+            } else {
+                // Si no está visible, lo mostramos
+                // Primero, cerramos cualquier otro detalle abierto en la misma sección
+                document.querySelectorAll(".card .details-container").forEach(otherContainer => {
+                    if (otherContainer !== container) {
+                        otherContainer.style.display = "none";
+                        otherContainer.closest(".card").style.background = "var(--secondary-color)";
+                        otherContainer.closest(".card").querySelector("h1 i")?.classList.remove("fa-chevron-up");
+                        otherContainer.closest(".card").querySelector("h1 i")?.classList.add("fa-chevron-down");
+                    }
+                });
+
+
+                container.innerHTML = ""; // Limpiar contenido previo
+                detailsContent[type].forEach(item => {
+                    const detailCard = document.createElement("div");
+                    detailCard.className = "card";
+                    // Para los cards internos, no se aplica el onclick de toggleDetails
+                    detailCard.innerHTML = `<h4>${item.title}</h4><p>${item.text}</p>`;
+                    container.appendChild(detailCard);
+                });
+                container.style.display = "grid";
+                card.style.background = "#17a003"; // Cambiar color del card padre al abrir
+                icon.classList.remove("fa-chevron-down");
+                icon.classList.add("fa-chevron-up");
+            }
+        }
+
+
+        // Acordeones
+        const accordions = document.querySelectorAll(".accordion");
+        accordions.forEach(acc => {
+            acc.addEventListener("click", function () {
+                this.classList.toggle("active");
+                let panel = this.nextElementSibling;
+                const icon = this.querySelector('i');
+
+                if (panel.classList.contains("show")) {
+                    panel.classList.remove("show");
+                    icon.classList.remove("fa-chevron-down");
+                    icon.classList.add("fa-chevron-right");
+                } else {
+                    // Cerrar otros acordeones abiertos en el mismo nivel
+                    const parentPanel = this.closest('.panel');
+                    const siblings = (parentPanel || document).querySelectorAll('.accordion');
+                    siblings.forEach(sibling => {
+                        if (sibling !== this && sibling.classList.contains('active')) {
+                            sibling.classList.remove('active');
+                            sibling.nextElementSibling.classList.remove('show');
+                            sibling.querySelector('i')?.classList.remove("fa-chevron-down");
+                            sibling.querySelector('i')?.classList.add("fa-chevron-right");
+                        }
+                    });
+
+                    panel.classList.add("show");
+                    icon.classList.remove("fa-chevron-right");
+                    icon.classList.add("fa-chevron-down");
+                }
+            });
+        });
+
+        // Menú hamburguesa
+        const hamburgerMenu = document.getElementById("hamburger-menu");
+        const mainNav = document.getElementById("main-nav");
+
+        hamburgerMenu.addEventListener("click", () => {
+            mainNav.classList.toggle("open");
+        });
+
+        // Popups para "Misión, Visión, Valores, Staff" (si decides usarlos en lugar de expandir en la misma tarjeta)
+        function openPopup(id) {
+            document.getElementById(`popup-${id}`).classList.add('active');
+        }
+
+        function closePopup(id) {
+            document.getElementById(`popup-${id}`).classList.remove('active');
+        }
+
+        // Funciones para abrir y cerrar el popup
+        function openGallery() {
+            document.getElementById('image-popup').classList.add('active');
+        }
+
+        function closeGallery() {
+            document.getElementById('image-popup').classList.remove('active');
+        }
+
+        function openGalleryEsc() {
+            document.getElementById('image-popup-esc').classList.add('active');
+        }
+
+        function closeGalleryEsc() {
+            document.getElementById('image-popup-esc').classList.remove('active');
+        }
+
+        const audioBtn = document.getElementById('audio-btn');
+        const audio = document.getElementById('miAudio');
+        const icon = audioBtn.querySelector('i');
+
+        audioBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                icon.classList.remove('fa-play');
+                icon.classList.add('fa-pause');
+                audioBtn.textContent = ' Detener Audio';
+                audioBtn.prepend(icon);
+            } else {
+                audio.pause();
+                icon.classList.remove('fa-pause');
+                icon.classList.add('fa-play');
+                audioBtn.textContent = ' Reproducir Audio';
+                audioBtn.prepend(icon);
+            }
+        });
+        const audioBtnDos = document.getElementById('audio-btn-dos');
+        const audioDos = document.getElementById('miAudioDos');
+        const iconDos = audioBtnDos.querySelector('i');
+
+        audioBtnDos.addEventListener('click', () => {
+            if (audioDos.paused) {
+                audioDos.play();
+                iconDos.classList.remove('fa-play');
+                iconDos.classList.add('fa-pause');
+                audioBtnDos.textContent = ' Detener Audio';
+                audioBtnDos.prepend(icon);
+            } else {
+                audioDos.pause();
+                iconDos.classList.remove('fa-pause');
+                iconDos.classList.add('fa-play');
+                audioBtnDos.textContent = ' Reproducir Audio';
+                audioBtnDos.prepend(icon);
+            }
+        });
+    </script>
+
+</body>
+<footer style="
+    background-color: #000093; 
+    color: white; 
+    text-align: center; 
+    padding: 1rem 2rem; 
+    margin-top: 1rem;
+">
+    <p>&copy; 2025 Técnicas Comerciales.</p>
+    <p>Contacto: | Instituto Cordillera</p>
+</footer>
+
+
+</html>
